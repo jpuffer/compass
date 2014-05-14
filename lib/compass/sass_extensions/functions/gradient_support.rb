@@ -53,7 +53,7 @@ module Compass::SassExtensions::Functions::GradientSupport
       def standardized_prefix(prefix)
         class_eval %Q{
           def to_#{prefix}(options = self.options)
-            Sass::Script::String.new("-#{prefix}-\#{to_s(options)}")
+            Sass::Script::String.new("-#{prefix}-\#{to_sp(options)}")
           end
         }
       end
@@ -102,6 +102,14 @@ module Compass::SassExtensions::Functions::GradientSupport
     end
 
     def to_s(options = self.options)
+      s = "radial-gradient("
+      s << "at " << position.to_s(options) << ", " if position
+      s << shape_and_size.to_s(options) << ", " if shape_and_size
+      s << color_stops.to_s(options)
+      s << ")"
+    end
+    
+    def to_sp(options = self.options)
       s = "radial-gradient("
       s << position.to_s(options) << ", " if position
       s << shape_and_size.to_s(options) << ", " if shape_and_size
@@ -158,6 +166,13 @@ module Compass::SassExtensions::Functions::GradientSupport
     end
 
     def to_s(options = self.options)
+      s = "linear-gradient("
+      s << position_or_angle.to_s(options) << ", " if position_or_angle
+      s << color_stops.to_s(options)
+      s << ")"
+    end
+    
+    def to_sp(options = self.options)
       s = "linear-gradient("
       s << position_or_angle.to_s(options) << ", " if position_or_angle
       s << color_stops.to_s(options)
